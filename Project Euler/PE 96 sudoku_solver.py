@@ -37,7 +37,10 @@ def mark(sudoku, constraints, index):
     for i in xrange(row * 9, row * 9 + 9):
         if i == index:
             continue
+        l = len(constraints[i])
         constraints[i].discard(sudoku[index])
+        if len(constraints[i]) != l:
+            mark(sudoku, constraints, i)
         if sudoku[i] == sudoku[index]:
             return False
     # check column
@@ -45,7 +48,10 @@ def mark(sudoku, constraints, index):
     for i in xrange(0, 9):
         if column == index:
             continue
+        l = len(constraints[column])
         constraints[column].discard(sudoku[index])
+        if len(constraints[column]) != l:
+            mark(sudoku, constraints, i)
         if sudoku[column] == sudoku[index]:
             return False
         column += 9
@@ -58,7 +64,10 @@ def mark(sudoku, constraints, index):
             i = box_zero + x + 9*y
             if index == i:
                 continue
+            l = len(constraints[i])
             constraints[i].discard(sudoku[index])
+            if len(constraints[i]) != l:
+                mark(sudoku, constraints, i)
             if sudoku[i] == sudoku[index]:
                 return False
     return True
