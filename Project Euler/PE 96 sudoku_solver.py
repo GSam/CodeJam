@@ -44,13 +44,16 @@ def mark(sudoku, constraints, index):
          #   raise Exception("arg %d" % (index))
    # print constraints
     row = index / 9
+
+    to_check = [set() for x in xrange(11)]
+
     for i in xrange(row * 9, row * 9 + 9):
         if i == index:
             continue
         l = len(constraints[i])
         if len(constraints[i]) == 0:
             #return False
-            raise Exception("poo%d %d" % (i,index))
+            raise Exception("poop%d %d" % (i,index))
         constraints[i].discard(sudoku[index])
         if len(constraints[i]) == 0:
             #raise Exception("%d %d" % (i,index))
@@ -62,7 +65,19 @@ def mark(sudoku, constraints, index):
                 return False
         if sudoku[i] == sudoku[index]:
             return False
+        if sudoku[i] == 0:
+            to_check[sudoku[i]].add(i)
 
+    for x in xrange(1,10):
+        t = to_check[x]
+        if len(t) == 1:
+            print t, x
+            ind = t.pop()
+            sudoku[ind] = x
+            if not mark(sudoku, constraints, ind):
+                return False
+
+    to_check = [set() for x in xrange(11)]
     # check column
     column = index % 9
     for i in xrange(0, 9):
@@ -84,7 +99,20 @@ def mark(sudoku, constraints, index):
                 return False
         if sudoku[column] == sudoku[index]:
             return False
+        if sudoku[column] == 0:
+            to_check[sudoku[column]].add(column)
         column += 9
+
+    for x in xrange(1,10):
+        t = to_check[x]
+        if len(t) == 1:
+            ind = t.pop()
+            sudoku[ind] = x
+            if not mark(sudoku, constraints, ind):
+                return False
+
+    to_check = [set() for x in xrange(11)]
+
     # check box
     boxX = (index % 9) / 3
     boxY = index / 27
@@ -108,6 +136,15 @@ def mark(sudoku, constraints, index):
                 if not mark(sudoku, constraints, i):
                     return False
             if sudoku[i] == sudoku[index]:
+                return False
+            if sudoku[i] == 0:
+                to_check[sudoku[i]].add(i)
+    for x in xrange(1,10):
+        t = to_check[x]
+        if len(t) == 1:
+            ind = t.pop()
+            sudoku[ind] = x
+            if not mark(sudoku, constraints, x):
                 return False
     return True
 
@@ -133,7 +170,10 @@ def solve(sudoku, constraints, index):
        # print 'ddddd', x
         clone = sudoku[:]
         clone[index] = x
-        clone_con = copy.deepcopy(constraints)
+        #clone_con = copy.deepcopy(constraints)
+        clone_con = [None] * 81
+        for x in xrange(len(constraints)):
+            clone_con[x] = set(constraints[x])
         if (mark(clone, clone_con, index)):
          #   print 'boo'
             res = solve(clone, clone_con, s)
@@ -159,7 +199,9 @@ def solve_init(sudoku):
 ans = 0
 
 while True:
-    f.readline()
+    n = f.readline()
+    if n is None or n.strip() == "":
+        break
     s = f.readline().strip() + f.readline().strip() + f.readline().strip() + f.readline().strip()  + f.readline().strip()+ f.readline().strip() + f.readline().strip() + f.readline().strip() + f.readline().strip()
     s = [int(x) for x in s]
     a = solve_init(s)
