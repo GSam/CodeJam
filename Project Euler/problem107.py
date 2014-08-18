@@ -16,6 +16,8 @@ spanning = set()
 queue = []
 count = 0
 total_cost = 0
+
+# Pick an arbitrary starting node which has links, e.g. node 3
 heapq.heappush(queue, (0,3,(None, None)))
 while(len(queue) > 0 and count < 40):
     cost,node,link = heapq.heappop(queue)
