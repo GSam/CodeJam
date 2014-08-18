@@ -1,3 +1,4 @@
+# Simple implementation of Prim's Algorithm
 import heapq
 file = open("p107_network.txt", 'r')
 
