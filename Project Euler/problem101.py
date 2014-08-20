@@ -19,3 +19,4 @@ for g in range(2, 12):
         print total + 1
     sum += total + 1
 print sum
+
