@@ -1,4 +1,6 @@
-import collections
+# Used to run in about a minute, now closer to half
+# Basically slowed down a prime sieve to fit the problem
+# Could probably be made immensely more efficient by actually skipping values
 
 def primes2(n):
     """ Input n>=6, Returns a list of primes, 2 <= p < n """
@@ -15,30 +17,26 @@ val = None
 def primes(n):
     global val
     """ Returns  a list of primes < n """
-    sieve = [True] * n
-    val = [[] for x in xrange(n)]
+    #sieve = [True] * n
+    val = [0 for x in xrange(n)]
     for i in xrange(3,n,1):
         for x in xrange(i, n, i):
-            sieve[x] = False
-            val[x].append(i)
-    return [2] + [i for i in xrange(3,n,2) if sieve[i]]
+            val[x] += 1
 
 primes(10 ** 7)
 print "DONE"
 this = True
 last = -1
-lastlist = []
 count = 0
 for x in xrange(2, 10**7):
-    somelist = val[x][:]
+    somelist = val[x]
     if this:
-        somelist.append(2)
-    somelist.append(1)
-    if len(somelist) == last:
+        somelist += 1
+    somelist += 1
+    if somelist == last:
         count += 1
         #print somelist, lastlist, len(somelist), len(lastlist)
-    last = len(somelist)
-    lastlist = somelist
+    last = somelist
     #print somelist
     this = not this
     
