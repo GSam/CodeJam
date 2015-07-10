@@ -17,39 +17,51 @@ primes = primes2(10**8)
 a = set(primes)
 
 length = 1
-begin = ['1','2','3','4','5','6','7','8','9']
+begin = ['']
 ans = 0
 
 checked = set()
 
-while length < 4:
+while length < 14:
     out = []
     for num in begin:
         for char in ['0','1','2','3','4','5','6','7','8','9']:
             n = num + char
             intn = int(n)
+            if intn == 0:
+                continue
             sq = intn ** 0.5 + 1
-
-            if intn in a:
+            s = sum(int(b) for b in n)
+            if intn % s != 0:
+                continue
+            
+            if True:
                 # right truncatable Harshad prime
                 # check if strong
-                prior = n[:-1]
+                prior = n
                 priors = sum(int(b) for b in prior)
                 tocheck = int(prior) / priors
                 tosq = tocheck ** 0.5 + 1
                 
                 if tocheck in a:
                     # strong
-                    ans += intn
-                    print intn
-                    continue
-                
-                if tocheck in checked:
-                    continue
-                
-                checked.add(tocheck)
+                    for nextDig in ['1','3','7','9']:
+                        maybe = int(prior + nextDig)
+                        msq = maybe ** 0.5 + 1
+                        isPrime = True
+                        for y in primes:
+                            if y > msq:
+                                # prime
+                                break
+                            if maybe % y == 0:
+                                isPrime = False
+                                break
+                        if isPrime:
+                            ans += maybe
+                            #print maybe
+                    
 
-                if tocheck > 10 ** 8 - 1:
+                elif tocheck > 10 ** 8 - 1:
                     # might still be prime
                     isPrime = True
                     for y in primes:
@@ -61,63 +73,21 @@ while length < 4:
                             break
                     if isPrime:
                         # strong
-                        a.add(tocheck)
-                        ans += intn
-                        print intn
-                
-                continue
-            
-            s = sum(int(b) for b in n)
-            if intn % s != 0:
-                # right truncatable maybe prime
-                if intn > 10 ** 8 - 1:
-                    # might still be prime
-                    isPrime = True
-                    for y in primes:
-                        if y > sq:
-                            # prime
-                            break
-                        if intn % y == 0:
-                            isPrime = False
-                            break
-                    if isPrime:
-                        a.add(intn)
-                        # right truncatable Harshad prime
-                        # check if strong
-                        prior = n[:-1]
-                        priors = sum(int(b) for b in prior)
-                        tocheck = int(prior) / priors
-                        tosq = tocheck ** 0.5 + 1
 
-                        if tocheck in a:
-                            # strong
-                            ans += intn
-                            print intn
-                            continue
-
-                        if tocheck in checked:
-                            continue
-                
-                        checked.add(tocheck)
-                        
-                        if tocheck > 10 ** 8 - 1:
-                            # might still be prime
+                        for nextDig in ['1','3','7','9']:
+                            maybe = int(prior + nextDig)
+                            msq = maybe ** 0.5 + 1
                             isPrime = True
                             for y in primes:
-                                if y > tosq:
+                                if y > msq:
                                     # prime
                                     break
-                                if tocheck % y == 0:
+                                if maybe % y == 0:
                                     isPrime = False
                                     break
                             if isPrime:
-                                # strong
-                                a.add(tocheck)
-                                print intn
-                                ans += intn
-                        
-                continue
-
+                                ans += maybe
+                                #print maybe
 
 
             out.append(n)
