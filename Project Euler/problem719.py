@@ -2,6 +2,9 @@ import itertools
 
 T = set()
 for x in range(1, int((10**12) ** 0.5)+1):
+    if x % 9 not in [0, 1]: # optimization post-completion
+        continue
+        
     string = str(x * x)
     #print('*****', string)
     for y in range(len(string), 0, -1):
